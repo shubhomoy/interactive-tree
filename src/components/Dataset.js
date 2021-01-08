@@ -69,7 +69,7 @@ class Dataset extends React.Component {
     showDataset = () => {
         let dataset = this.construct_dataset()
 
-        if(dataset.length == 0) {
+        if(dataset.length === 0) {
             return(
                 <div className="row table-header" style={{padding: "20px"}}>
                     There is no data. <br />Create class and plot in the above graph to generate dataset.
@@ -125,14 +125,26 @@ class Dataset extends React.Component {
 
     showCalculation = () => {
         if(this.state.calculate) {
-            return this.props.subdata.map((data, idx) => {
-                return(
-                    <div>
-                        <Misclassification key={idx} dataset={this.construct_dataset_from_data(data)} subdata={data} onSplitSelected={this.getSplits} />
+            return(
+                <div>
+                    {
+                        this.props.subdata.map((data, idx) => {
+                            return(
+                                <div key={idx}>
+                                    <Misclassification dataset={this.construct_dataset_from_data(data)} subdata={data} onSplitSelected={this.getSplits} />
+                                    <div className="spacer"></div>
+                                </div>
+                            )
+                        })
+                    }
+
+                    <div className="row" onClick={(e)=>this.setState({calculate: false})}>
+                        <div className="col-12-sm">
+                            <div className="collapsible-button-negative">Clear Classification</div>
+                        </div>
                     </div>
-                    
-                )
-            })
+                </div>
+            )
         }
         if(this.construct_dataset().length>0) {
             if(this.state.classes.length > 1) {

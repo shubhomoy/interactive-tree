@@ -10,12 +10,12 @@ class Plot extends React.Component {
             'classes': [],
             'data': [],
             'lines': [],
-            'sub_data': []
+            'sub_data': [],
+            'colors': ['red', 'blue', 'green', '#9c27b0', '#ffc107']
         }
 
         this.updateActiveClass = this.updateActiveClass.bind(this);
         this.updateChange = this.updateChange.bind(this);
-        this.updateClassColor = this.updateClassColor.bind(this);
         this.createClass = this.createClass.bind(this);
         this.getCoord = this.getCoord.bind(this);
     }
@@ -55,9 +55,20 @@ class Plot extends React.Component {
         })
     }
 
-    updateActiveClass = (c) => {
+    updateActiveClass = (c, idx) => {
+        let classes = this.state.classes
+        if(c.name !== "") {
+            classes[idx].msg = "You can now start adding data corresponding to this class in the plot"
+            classes[idx].error = ""
+            this.setState({
+                'activeClass': c
+            });
+        }else{
+            classes[idx].error = "Specify name first"
+            classes[idx].msg = ""
+        }
         this.setState({
-            'activeClass': c
+            'classes': classes
         });
     }
 
@@ -87,10 +98,34 @@ class Plot extends React.Component {
     // Adds class input fields
     createClass = () => {
         let classes = this.state.classes
+        let used_colors = []
+        let assigned_color = null;
+        
+        classes.forEach((cls) => {
+            used_colors.push(cls.color)
+        })
+
+        this.state.colors.reverse().forEach((color) => {
+            let u = false
+            used_colors.forEach((used) => {
+                if(used === color)
+                    u = true
+            })
+
+            if(!u) {
+                assigned_color = color
+                return
+            }
+        })
+        
+
         classes.push({
             name: '',
-            color: ''
+            color: assigned_color,
+            error: '',
+            msg: ''
         })
+
         this.setState({
             classes: classes
         })
@@ -102,10 +137,6 @@ class Plot extends React.Component {
         this.setState({
             classes: classes
         })
-    }
-
-    updateClassColor = (e, value) => {
-        value.color = e
     }
 
     draw_cell = (i, j, cell) => {
@@ -214,6 +245,18 @@ class Plot extends React.Component {
         })
     }
 
+    showCreateClassButton = () => {
+        return(
+            <div className="row">
+                <div className="col-12-sm" style={{textAlign: "center"}}>
+                    <button className="create-class-btn" onClick={this.createClass}>
+                        Create Class
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     render() {
         return(
             <div>
@@ -250,32 +293,38 @@ class Plot extends React.Component {
                     </div>
                     
                     <div className="col-5">
-                        {this.state.classes.map((cls, key) => {
-                            return(
-                                <div key={key} className="row">
-                                    <div className="col-5-sm">
-                                        Class Name 
-                                        <input type="text" value={this.state.classes[key].name} onChange={e => this.updateChange(e.target.value, key, 'name')}/>
+                        <div className="neu-2 class-entry-container">
+                            {this.state.classes.map((cls, key) => {
+                                return(
+                                    <div key={key} className="class-container">
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <div className="selected_color" style={{backgroundColor: cls.color}}></div>
+                                                <input className="class-text" type="text" placeholder="Class Name" value={this.state.classes[key].name} onChange={e => this.updateChange(e.target.value, key, 'name')}/>
+                                                <div className="remove-class-btn" onClick={() => this.removeClass(cls)}>X</div>
+                                            </div>
+                                        </div>
+                                        <div className="row">    
+                                            <div className="col-12-sm">
+                                                <center>
+                                                <button className={this.state.activeClass === cls ? "add-to-graph-selected": "add-to-graph"} onClick={() => this.updateActiveClass(cls, key)}>
+                                                    {this.state.activeClass === cls ? "Selected": "Add to plot"}
+                                                </button>
+                                                </center>
+                                            </div>
+                                        </div>
+                                        <div className="row">    
+                                            <div className="col-12-sm">
+                                                <center>
+                                                {this.state.activeClass === cls ? cls.msg: cls.error}
+                                                </center>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="col-3-sm">
-                                        Color
-                                        <input type="text" value={this.state.classes[key].color} onChange={e => this.updateChange(e.target.value, key, 'color')}/>
-                                    </div>
-                                    <div className="col-2-sm">
-                                        <div className="plot-btn" onClick={() => this.updateActiveClass(cls)}>Plot</div>
-                                    </div>
-                                    <div className="col-2-sm">
-                                        <div className="plot-btn red" onClick={() => this.removeClass(cls)}>X</div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                        <div className="row">
-                            <div className="col-12-sm" style={{textAlign: "center"}}>
-                                <div className="create-class-btn" onClick={this.createClass}>
-                                    Create Class
-                                </div>
-                            </div>
+                                )
+                            })}
+
+                            {this.state.classes.length < 5 ? this.showCreateClassButton(): null}
                         </div>
                     </div>
                 </div>

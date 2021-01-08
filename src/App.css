@@ -52,28 +52,24 @@ body {
   padding-top: 25px;
 }
 
-.create-class-btn {
-  background-color: cadetblue;
-  margin: auto;
-  width: 150px;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-.plot-btn {
-  background-color: cadetblue;
-  margin: auto;
-  text-align: center;
-  padding: 3px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #ffffff;
-}
-
 .red {
   background-color: red;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.green {
+  background-color: green;
+}
+
+.violet {
+  background-color: #9c27b0;
+}
+
+.yellow {
+  background-color: #ffc107;
 }
 
 .right-border {
@@ -94,10 +90,6 @@ body {
 .left-border {
   box-sizing: border-box;
   border-left: 1px solid black;
-}
-
-input[type=text] {
-  width: 100%;
 }
 
 .spacer {
@@ -125,27 +117,12 @@ input[type=text] {
   width: 90%;
 }
 
-.collapsible-button {
-  cursor: pointer;
+.neu-2 {
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f0f0f0, #e2e2e2);
+  padding: 15px;
   font-weight: bold;
-  border-radius: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  color: #ffffff;
-  background: linear-gradient(145deg, #3e92ff, #347ae5);
-  box-shadow: 2px 2px 5px #24549d, -2px -2px 5px #50bcff;
-}
-
-.collapsible-button:hover {
-  background: linear-gradient(145deg, #347ae5, #3e92ff);
-  box-shadow: 2px 2px 5px #24549d, -2px -2px 5px #50bcff;
-}
-
-.collapsible-button:active {
-  background: #3a88fe;
-  box-shadow: inset 2px 2px 6px #24549d, inset -2px -2px 6px #50bcff;
+  border: 5px solid white;
 }
 
 .collapsible-button-positive {
@@ -208,6 +185,114 @@ input[type=text] {
   width: 100%;
   margin: auto;
   float: left;
+}
+
+.class-entry-container {
+  min-width: 250px;
+}
+.class-entry-container .class-container {
+  border-bottom: 1px solid #bebebe;
+}
+.class-entry-container .selected_color {
+  float: left;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 1px solid #bebebe;
+  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
+}
+.class-entry-container .class-text {
+  float: left;
+  width: 50%;
+  margin-left: 20px;
+  border-radius: 20px;
+  padding: 5px 15px 5px 15px;
+  border: none;
+  font-size: 12px;
+  color: #555;
+  box-shadow: inset 2px 2px 5px #bebebe, inset -2px -2px 5px #ffffff;
+}
+.class-entry-container .remove-class-btn {
+  margin-top: 5px;
+  background-color: red;
+  float: left;
+  border-radius: 50%;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.class-entry-container .create-class-btn {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  width: 70%;
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  background: #24cfaa;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
+  transition: 0.5s;
+}
+.class-entry-container .create-class-btn:hover {
+  background: #2fdbb6;
+}
+.class-entry-container .create-class-btn:active {
+  background: #1da88a;
+}
+.class-entry-container .add-to-graph {
+  outline: none;
+  border: none;
+  height: 30px;
+  width: 50%;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: center;
+  background: #e0e0e0;
+  box-shadow: 5px 5px 6px #c7c7c7, -5px -5px 6px #f9f9f9;
+}
+.class-entry-container .add-to-graph-selected {
+  outline: none;
+  border: none;
+  height: 30px;
+  width: 50%;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: center;
+  background: #1da88a;
+  box-shadow: inset 5px 5px 6px #1a967b, inset -5px -5px 6px #20ba99;
+}
+
+.collapsible-button {
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: #ffffff;
+  background: #3e92ff;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
+  transition: 0.5s;
+}
+
+.collapsible-button:hover {
+  background: #347ae5;
+}
+
+.collapsible-button:active {
+  background: #3a88fe;
+  box-shadow: inset 2px 2px 6px #24549d, inset -2px -2px 6px #50bcff;
 }
 
 /*# sourceMappingURL=App.css.map */
