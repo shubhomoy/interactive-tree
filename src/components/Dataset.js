@@ -12,6 +12,7 @@ class Dataset extends React.Component {
         }
         this.construct_dataset = this.construct_dataset.bind(this);
         this.toggleDatasetPanel = this.toggleDatasetPanel.bind(this);
+        this.clearClassification = this.clearClassification.bind(this)
     }
 
     toggleDatasetPanel = (e) => {
@@ -123,6 +124,14 @@ class Dataset extends React.Component {
         this.props.onSplitSelected(split, sub_data)
     }
 
+    clearClassification = () => {
+        this.setState({
+            calculate: false
+        })
+
+        this.props.onClearClassification()
+    }
+
     showCalculation = () => {
         if(this.state.calculate) {
             return(
@@ -138,7 +147,7 @@ class Dataset extends React.Component {
                         })
                     }
 
-                    <div className="row" onClick={(e)=>this.setState({calculate: false})}>
+                    <div className="row" onClick={(e)=>this.clearClassification()}>
                         <div className="col-12-sm">
                             <div className="collapsible-button-negative">Clear Classification</div>
                         </div>
@@ -164,9 +173,11 @@ class Dataset extends React.Component {
         return(
             <div>
                 
-                <div className="row" onClick={(e)=>this.toggleDatasetPanel(e)}>
+                <div className="row">
                     <div className="col-12-sm">
-                        <div className="collapsible-button">{this.state.dataset_table_open ? "Hide" : "Show"} Dataset</div>
+                        <div className="collapsible-button" onClick={(e)=>this.toggleDatasetPanel(e)}>
+                            {this.state.dataset_table_open ? "Hide" : "Show"} Dataset
+                        </div>
                     </div>
                 </div>
                 <div className="neu">

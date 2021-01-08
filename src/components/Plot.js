@@ -330,7 +330,7 @@ class Plot extends React.Component {
                 </div>
                 {/* Eng of class and plot */}
                 
-                <Dataset data={this.state.data} subdata={this.state.sub_data} onSplitSelected={this.getSplits} />
+                <Dataset data={this.state.data} subdata={this.state.sub_data} onSplitSelected={this.getSplits} onClearClassification={this.clearSplits} />
                 <div className="spacer"></div>
             </div>
         )
