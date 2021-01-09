@@ -343,4 +343,14 @@ body {
   border-radius: 10px;
 }
 
+.footer {
+  margin-top: 150px;
+  text-align: center;
+  color: #78909c;
+  padding-bottom: 20px;
+}
+.footer a {
+  color: #78909c;
+}
+
 /*# sourceMappingURL=App.css.map */

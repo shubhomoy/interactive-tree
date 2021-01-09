@@ -1,5 +1,6 @@
 import React from 'react';
 import Plot from './components/Plot'
+import Footer from './components/Footer'
 import './App.css';
 
 class App extends React.Component {
@@ -23,7 +24,7 @@ class App extends React.Component {
         
         <Plot width={this.state.plot_width} height={this.state.plot_height} />
 
-
+        <Footer />
       </div>
     );
   }
