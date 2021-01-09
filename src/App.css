@@ -106,6 +106,10 @@ body {
 .neu h2 {
   padding-top: 30px;
 }
+.neu h3 {
+  padding-top: 30px;
+  padding-left: 30px;
+}
 .neu .horizontal-line {
   height: 1px;
   background-color: #bdbdbd;
@@ -116,13 +120,20 @@ body {
   height: 1px;
   width: 90%;
 }
+.neu .help-text {
+  padding-left: 30px;
+  padding-right: 30px;
+  font-style: italic;
+  padding-bottom: 10px;
+  color: #4caf50;
+}
 
 .neu-2 {
   border-radius: 20px;
   background: linear-gradient(145deg, #f0f0f0, #e2e2e2);
   padding: 15px;
   font-weight: bold;
-  border: 5px solid white;
+  border: 1px solid #dedede;
 }
 
 .collapsible-button-positive {
@@ -135,12 +146,12 @@ body {
   padding-bottom: 5px;
   color: #ffffff;
   background: linear-gradient(145deg, #55832b, #476e24);
-  box-shadow: 2px 2px 5px #436822, -2px -2px 5px #5b8c2e;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
 }
 
 .collapsible-button-positive:hover {
   background: linear-gradient(145deg, #476e24, #55832b);
-  box-shadow: 2px 2px 5px #436822, -2px -2px 5px #5b8c2e;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
 }
 
 .collapsible-button-positive:active {
@@ -158,18 +169,46 @@ body {
   padding-bottom: 5px;
   color: #ffffff;
   background: linear-gradient(145deg, #e85600, #c34800);
-  box-shadow: 2px 2px 5px #b84400, -2px -2px 5px #fa5c00;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
 }
 
 .collapsible-button-negative:hover {
   background: linear-gradient(145deg, #c34800, #e85600);
-  box-shadow: 2px 2px 5px #b84400, -2px -2px 5px #fa5c00;
+  box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #ffffff;
 }
 
 .collapsible-button-negative:active {
   background: #4f7a28;
   background: #d95000;
   box-shadow: inset 2px 2px 5px #b84400, inset -2px -2px 5px #fa5c00;
+}
+
+.split-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.split-table .table-header {
+  font-weight: bold;
+}
+.split-table td {
+  width: 50%;
+  text-align: center;
+}
+.split-table .table-data {
+  cursor: pointer;
+}
+.split-table .table-data:hover {
+  font-size: 20px;
+  background-color: #f8e3bb;
+}
+.split-table .table-data-selected {
+  font-size: 20px;
+  background-color: #aed581;
+}
+.split-table .recommended {
+  font-style: italic;
+  font-weight: bold;
+  color: #1a967b;
 }
 
 .table-header {
@@ -268,6 +307,7 @@ body {
   cursor: pointer;
   font-weight: 700;
   text-align: center;
+  color: #fff;
   background: #1da88a;
   box-shadow: inset 5px 5px 6px #1a967b, inset -5px -5px 6px #20ba99;
 }
@@ -293,6 +333,14 @@ body {
 .collapsible-button:active {
   background: #3a88fe;
   box-shadow: inset 2px 2px 6px #24549d, inset -2px -2px 6px #50bcff;
+}
+
+.announcement {
+  background-color: #e65100;
+  text-align: center;
+  padding: 10px;
+  color: #fff;
+  border-radius: 10px;
 }
 
 /*# sourceMappingURL=App.css.map */

@@ -1,6 +1,6 @@
 import React from 'react'
 
-class Misclassification extends React.Component {
+class Gini extends React.Component {
 
     constructor(props) {
         super(props)
@@ -54,24 +54,49 @@ class Misclassification extends React.Component {
         return data;
     }
 
-    get_max_class_num = (dataset) => {
-        let class_freq = {}
-        let max = 0
+    get_class_freq = (dataset, cls) => {
+        let num = 0
         dataset.forEach((data) => {
-            class_freq[data.class] = (class_freq[data.class] || 0) + 1
-            if(class_freq[data.class] > max)
-                max = class_freq[data.class]
+            if(data.class === cls) {
+                num += 1
+            }
         })
-        
-        return max
+        return num
+    }
+
+    get_classes = (dataset) => {
+        let classes = []
+        dataset.forEach((data) => {
+            if(!classes.includes(data.class)) {
+                classes.push(data.class)
+            }
+        })
+
+        return classes
+    }
+
+    get_gini = (dataset) => {
+        let classes = this.get_classes(dataset)
+        let result = 0
+        classes.forEach((cls) => {
+            let cls_freq = this.get_class_freq(dataset, cls)
+            let cls_prob = cls_freq / dataset.length
+            let gini = cls_prob * (1 - cls_prob)
+            result += gini
+        })
+
+        return result
     }
 
     calculate_x1 = () => {
+        // Sort the dataset increasing order of x-coord
         let dataset = [...this.props.dataset];
         dataset = dataset.sort((a, b) => a.x1 > b.x1 ? 1 : -1)
         let x1_pivot = 0
 
         let result = []
+
+        // For each x-coord split, calculate the left and right dataset errors
         for(let i=0; i<dataset.length; i++) {
             x1_pivot = dataset[i].x1 + 0.5
             
@@ -89,21 +114,20 @@ class Misclassification extends React.Component {
             let left_data = this.get_left(x1_pivot, dataset)
             let right_data = this.get_right(x1_pivot, dataset)
 
-            let missclass_left = 1 - (this.get_max_class_num(left_data) / left_data.length)
-            let missclass_right = 1 - (this.get_max_class_num(right_data) / right_data.length)
 
-            missclass_left = isNaN(missclass_left) ? 0: missclass_left
-            missclass_right = isNaN(missclass_right) ? 0: missclass_right
+            let gini_left = this.get_gini(left_data)
+            let gini_right = this.get_gini(right_data)
 
-            let missclassification = (missclass_left * left_data.length) + (missclass_right * right_data.length)
-            if(missclassification < this.state.min_error) {
-                this.setState({min_error: missclassification})
+            let gini = (gini_left * left_data.length) + (gini_right * right_data.length)
+
+            if(gini < this.state.min_error) {
+                this.setState({min_error: gini})
             }
             result.push({
                 x1_pivot: x1_pivot,
-                missclassification: missclassification,
-                q1: missclass_left,
-                q2: missclass_right,
+                gini: gini,
+                q1: gini_left,
+                q2: gini_right,
                 left_data: left_data,
                 right_data: right_data
             })
@@ -134,22 +158,19 @@ class Misclassification extends React.Component {
             let top_data = this.get_top(x2_pivot, dataset)
             let bottom_data = this.get_bottom(x2_pivot, dataset)
 
-            let missclass_top = 1 - (this.get_max_class_num(top_data) / top_data.length)
-            let missclass_bottom = 1 - (this.get_max_class_num(bottom_data) / bottom_data.length)
+            let gini_top = this.get_gini(top_data)
+            let gini_bottom = this.get_gini(bottom_data)
 
-            missclass_top = isNaN(missclass_top) ? 0: missclass_top
-            missclass_bottom = isNaN(missclass_bottom) ? 0: missclass_bottom
+            let gini = (gini_top * top_data.length) + (gini_bottom * bottom_data.length)
 
-            let missclassification = (missclass_top * top_data.length) + (missclass_bottom * bottom_data.length)
-
-            if(missclassification < this.state.min_error) {
-                this.setState({min_error: missclassification})
+            if(gini < this.state.min_error) {
+                this.setState({min_error: gini})
             }
             result.push({
                 x2_pivot: x2_pivot,
-                missclassification: missclassification,
-                q1: missclass_bottom,
-                q2: missclass_top,
+                gini: gini,
+                q1: gini_bottom,
+                q2: gini_top,
                 top_data: top_data,
                 bottom_data: bottom_data
             })
@@ -196,7 +217,7 @@ class Misclassification extends React.Component {
                                 Q2 <br />(Right or Top Region)
                             </td>
                             <td>
-                                Missclassification
+                                GINI
                             </td>
                             <td></td>
                         </tr>
@@ -220,10 +241,10 @@ class Misclassification extends React.Component {
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td>
-                                            {Math.trunc(s.missclassification*100) / 100}
+                                            {Math.trunc(s.gini*100) / 100}
                                         </td>
                                         <td className="recommended">
-                                            {s.missclassification === this.state.min_error ? "Recommended" : null}
+                                            {s.gini === this.state.min_error ? "Recommended" : null}
                                         </td>
                                     </tr>
                                 )
@@ -257,10 +278,10 @@ class Misclassification extends React.Component {
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td>
-                                            {Math.trunc(s.missclassification*100) / 100}
+                                            {Math.trunc(s.gini*100) / 100}
                                         </td>
                                         <td className="recommended">
-                                            {s.missclassification === this.state.min_error ? "Recommended" : null}
+                                            {s.gini === this.state.min_error ? "Recommended" : null}
                                         </td>
                                     </tr>
                                 )
@@ -275,4 +296,4 @@ class Misclassification extends React.Component {
     }
 }
 
-export default Misclassification;
+export default Gini;

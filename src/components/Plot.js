@@ -11,13 +11,18 @@ class Plot extends React.Component {
             'data': [],
             'lines': [],
             'sub_data': [],
-            'colors': ['red', 'blue', 'green', '#9c27b0', '#ffc107']
+            'colors': ['red', 'blue', 'green', '#9c27b0', '#ffc107'],
+            'dataset': [],
+            'clear_split': false,
+            'num_data': 0,
+            'announcement': null
         }
 
         this.updateActiveClass = this.updateActiveClass.bind(this);
         this.updateChange = this.updateChange.bind(this);
         this.createClass = this.createClass.bind(this);
         this.getCoord = this.getCoord.bind(this);
+        this.construct_dataset = this.construct_dataset.bind(this)
     }
 
     componentDidMount() {
@@ -44,25 +49,55 @@ class Plot extends React.Component {
         if(this.state.classes.length === 0)
             return
 
-        let data = this.state.data
-        if(data[i][j] !== null)
-            data[i][j] = null
-        else
-            data[i][j] = this.state.activeClass
+        let data = [...this.state.data]
+        let num_data = this.state.num_data
 
+        if(data[i][j] !== null) {
+            data[i][j] = null
+            num_data -= 1
+        }else {
+            if(num_data >= 40) {
+                this.setState({
+                    announcement: "No more datapoints can be plotted. Please remove existing datapoints."
+                })
+                setTimeout(() => {this.setState({
+                    announcement: null
+                })}, 5000)
+                return
+            }
+            data[i][j] = this.state.activeClass
+            num_data += 1
+        }
+            
         this.setState({
-            data: data
+            data: data,
+            num_data: num_data
         })
+
+        this.construct_dataset()
     }
 
     updateActiveClass = (c, idx) => {
         let classes = this.state.classes
         if(c.name !== "") {
-            classes[idx].msg = "You can now start adding data corresponding to this class in the plot"
-            classes[idx].error = ""
-            this.setState({
-                'activeClass': c
-            });
+            let exists = false
+            classes.forEach((cls) => {
+                if(cls.name === c.name && cls.color !== c.color) {
+                    exists = true
+                    return
+                }
+            })
+
+            if(exists) {
+                classes[idx].error = "Class already exist. Try different name"
+                classes[idx].msg = ""
+            }else{
+                classes[idx].msg = "You can now start adding data corresponding to this class in the plot"
+                classes[idx].error = ""
+                this.setState({
+                    'activeClass': c
+                });
+            }
         }else{
             classes[idx].error = "Specify name first"
             classes[idx].msg = ""
@@ -73,6 +108,7 @@ class Plot extends React.Component {
     }
 
     removeClass = (c) => {
+        // Remove every point from the plot
         let data = this.state.data;
         for(let i=0; i<data.length; i++) {
             for(let j=0; j<data[i].length; j++) {
@@ -82,6 +118,7 @@ class Plot extends React.Component {
             }
         }
 
+        // Remove the class from state
         let classes = this.state.classes;
         classes = classes.filter((cls) => {
             return cls.name !== c.name
@@ -92,7 +129,20 @@ class Plot extends React.Component {
             classes: classes
         })
 
+        // clear decision boundaries
         this.clearSplits()
+        this.removeDataset(c)
+    }
+
+    removeDataset = (c) => {
+        let dataset = [...this.state.dataset]
+        dataset = dataset.filter((d) => {
+            return d.class !== c.name
+        })
+
+        this.setState({
+            dataset: dataset
+        })
     }
 
     // Adds class input fields
@@ -239,9 +289,12 @@ class Plot extends React.Component {
     }
 
     clearSplits = () => {
+        let subdata = [...this.state.sub_data]
+        subdata = subdata.slice(0, 1)
         this.setState({
             lines: [],
-            sub_data: []
+            sub_data: subdata,
+            clear_split: true
         })
     }
 
@@ -257,38 +310,82 @@ class Plot extends React.Component {
         )
     }
 
+    construct_dataset = () => {
+        let data = []
+        for(let i=0; i<this.state.data.length; i++) {
+            for(let j=0; j<this.state.data[i].length; j++) {
+                if(this.state.data[i][j] !== null) {
+                    data.push({
+                        x1: j,
+                        x2: this.state.data.length - 1 - i,
+                        class: this.state.data[i][j].name,
+                        color: this.state.data[i][j].color
+                    })
+                }
+            }
+        }
+
+        this.clearSplits()
+
+        this.setState({
+            dataset: data
+        })
+    }
+
+    updateClearSplitState = () => {
+        if (this.state.clear_split) {
+            this.setState({
+                clear_split: false
+            })
+        }
+    }
+
+    showAnnouncement = () => {
+        if(this.state.announcement != null) {
+            return(
+                <div className="row">
+                    <div className="col-12 announcement">
+                        {this.state.announcement}
+                    </div>
+                </div>
+            )
+        }
+    }
+
     render() {
         return(
             <div>
                 <div className="row">
                     <div className="col-7">
-                        <div className="tick-x2-container">
-                            <div className="x2-tick" style={{paddingTop: "35px"}}>35</div>
-                            <div className="x2-tick">30</div>
-                            <div className="x2-tick">25</div>
-                            <div className="x2-tick" style={{paddingTop: "27px"}}>20</div>
-                            <div className="x2-tick">15</div>
-                            <div className="x2-tick" style={{paddingTop: "27px"}}>10</div>
-                            <div className="x2-tick" style={{height: "85px"}}>5</div>
-                        </div>
-                        <div className="plot-container">
-                            {
-                                this.state.data.map((row, i) => {
-                                    return row.map((cell, j) => {
-                                        return this.draw_cell(i, j, cell)
+                        <div style={{minWidth: "440px"}}>
+                            <div className="tick-x2-container">
+                                <div className="x2-tick" style={{paddingTop: "35px"}}>35</div>
+                                <div className="x2-tick">30</div>
+                                <div className="x2-tick">25</div>
+                                <div className="x2-tick" style={{paddingTop: "27px"}}>20</div>
+                                <div className="x2-tick">15</div>
+                                <div className="x2-tick" style={{paddingTop: "27px"}}>10</div>
+                                <div className="x2-tick" style={{height: "85px"}}>5</div>
+                            </div>
+                            <div className="plot-container">
+                                {
+                                    this.state.data.map((row, i) => {
+                                        return row.map((cell, j) => {
+                                            return this.draw_cell(i, j, cell)
+                                        })
                                     })
-                                })
-                            }
-                        </div>
-                        <div className="tick-x1-container">
-                            <div className="x1-tick" style={{width: "10px"}}>0</div>
-                            <div className="x1-tick" style={{width: "50px"}}>5</div>
-                            <div className="x1-tick" style={{width: "55px"}}>10</div>
-                            <div className="x1-tick">15</div>
-                            <div className="x1-tick">20</div>
-                            <div className="x1-tick">25</div>
-                            <div className="x1-tick">30</div>
-                            <div className="x1-tick">35</div>
+                                }
+                            </div>
+                            <div className="tick-x1-container">
+                                <div className="x1-tick" style={{width: "10px"}}>0</div>
+                                <div className="x1-tick" style={{width: "50px"}}>5</div>
+                                <div className="x1-tick" style={{width: "55px"}}>10</div>
+                                <div className="x1-tick">15</div>
+                                <div className="x1-tick">20</div>
+                                <div className="x1-tick">25</div>
+                                <div className="x1-tick">30</div>
+                                <div className="x1-tick">35</div>
+                            </div>
                         </div>
                     </div>
                     
@@ -330,7 +427,17 @@ class Plot extends React.Component {
                 </div>
                 {/* Eng of class and plot */}
                 
-                <Dataset data={this.state.data} subdata={this.state.sub_data} onSplitSelected={this.getSplits} onClearClassification={this.clearSplits} />
+                {this.showAnnouncement()}
+
+                <Dataset 
+                    data={this.state.data} 
+                    subdata={this.state.sub_data} 
+                    dataset={this.state.dataset} 
+                    classes={this.state.classes}
+                    clearSplitState={this.state.clear_split} 
+                    onSplitSelected={this.getSplits} 
+                    onClearClassification={this.clearSplits}
+                    onUpdateClearSplitState={this.updateClearSplitState} />
                 <div className="spacer"></div>
             </div>
         )
