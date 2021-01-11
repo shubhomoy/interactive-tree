@@ -18,7 +18,7 @@ class App extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-12-sm">
-            <h1 className="site-title">Interactive Tree</h1>
+            <h1 className="site-title">Interactive Decision Trees</h1>
           </div>
         </div>
         

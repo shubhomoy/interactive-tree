@@ -1,5 +1,7 @@
 import React from 'react'
 import Dataset from './Dataset'
+import MouseTooltip from 'react-sticky-mouse-tooltip';
+import {Animated} from 'react-animated-css'
 
 class Plot extends React.Component {
 
@@ -15,7 +17,10 @@ class Plot extends React.Component {
             'dataset': [],
             'clear_split': false,
             'num_data': 0,
-            'announcement': null
+            'announcement': null,
+            'tooltip': false,
+            'current_coord': null,
+            'showMoreNodesPopup': false
         }
 
         this.updateActiveClass = this.updateActiveClass.bind(this);
@@ -215,7 +220,9 @@ class Plot extends React.Component {
         })
 
         return(
-            <div key={i + " - " + j} className={"cell " + rightBorder + " " + topBorder} onClick={() => this.getCoord(i, j)}>
+            <div key={i + " - " + j} className={"cell " + rightBorder + " " + topBorder} onClick={() => this.getCoord(i, j)} 
+                onMouseOver={(e) => this.setState({tooltip: true, current_coord: "x=" + j + ", y=" + (39-i)})}
+                onMouseOut={(e) => this.setState({tooltip: false})}>
                 {cell ? <div className="assigned" style={{backgroundColor: cell.color}}></div> : ''}
             </div>
         )
@@ -284,8 +291,13 @@ class Plot extends React.Component {
 
         this.setState({
             lines: lines,
-            sub_data: data
+            sub_data: data,
+            showMoreNodesPopup: true
         })
+
+        setTimeout(() => {
+            this.setState({showMoreNodesPopup: false})
+        }, 5000)
     }
 
     clearSplits = () => {
@@ -424,6 +436,15 @@ class Plot extends React.Component {
                             {this.state.classes.length < 5 ? this.showCreateClassButton(): null}
                         </div>
                     </div>
+
+                    <MouseTooltip
+                        className="tooltip"
+                        visible={this.state.tooltip}
+                        offsetX={15}
+                        offsetY={10}>
+                        <span>{this.state.current_coord}</span>
+                    </MouseTooltip>
+
                 </div>
                 {/* Eng of class and plot */}
                 
@@ -439,6 +460,19 @@ class Plot extends React.Component {
                     onClearClassification={this.clearSplits}
                     onUpdateClearSplitState={this.updateClearSplitState} />
                 <div className="spacer"></div>
+
+
+                
+                <div className="popup-message-container row">
+                    <div className="col-3"></div>
+                    <Animated animationIn="bounceInUp" animationOut="bounceOutDown" isVisible={this.state.showMoreNodesPopup}>
+                    <div className="popup-message col-6">
+                        Split has been made in the plot and more nodes are added at the bottom!
+                    </div>
+                    </Animated>
+                    <div className="col-3"></div>
+                </div>
+                
             </div>
         )
     }

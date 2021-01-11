@@ -21,6 +21,7 @@ body {
   float: left;
   background-image: url("./img/plus2.svg");
   background-size: contain;
+  cursor: pointer;
 }
 .plot-container .cell .assigned {
   width: 10px;
@@ -29,8 +30,8 @@ body {
   background-color: "#ffffff";
 }
 .plot-container .cell:hover {
-  background-color: aqua;
   cursor: pointer;
+  background-color: aqua;
 }
 
 .tick-x1-container {
@@ -351,6 +352,30 @@ body {
 }
 .footer a {
   color: #78909c;
+}
+
+.tooltip {
+  border-radius: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-weight: bold;
+  background: linear-gradient(145deg, #cacaca, #f0f0f0);
+  box-shadow: 5px 5px 10px #d5d5d5, -5px -5px 10px #ebebeb;
+}
+
+.popup-message-container {
+  position: fixed;
+  bottom: 10px;
+  z-index: 9999;
+}
+
+.popup-message {
+  border-radius: 16px;
+  background: #424242;
+  color: #fff;
+  text-align: center;
+  box-shadow: 15px 15px 30px #d5d5d5, -15px -15px 30px #ebebeb;
+  padding: 20px;
 }
 
 /*# sourceMappingURL=App.css.map */

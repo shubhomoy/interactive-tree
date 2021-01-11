@@ -212,7 +212,13 @@ class Entropy extends React.Component {
                                 Threshold Values
                             </td>
                             <td>
+                                n1
+                            </td>
+                            <td>
                                 Q1 <br />(Left or Bottom Region)
+                            </td>
+                            <td>
+                                n2
                             </td>
                             <td>
                                 Q2 <br />(Right or Top Region)
@@ -236,7 +242,13 @@ class Entropy extends React.Component {
                                             x {"<"} {s.x1_pivot}
                                         </td>
                                         <td>
+                                            {s.left_data.length}
+                                        </td>
+                                        <td>
                                             {Math.trunc(s.q1 * 100) / 100}
+                                        </td>
+                                        <td>
+                                            {s.right_data.length}
                                         </td>
                                         <td>
                                             {Math.trunc(s.q2 * 100) /100}
@@ -252,7 +264,7 @@ class Entropy extends React.Component {
                             })
                         }
                         <tr>
-                            <td colSpan="5">
+                            <td colSpan="7">
                                 <hr className="dashed-line" />
                             </td>
                         </tr>
@@ -273,7 +285,13 @@ class Entropy extends React.Component {
                                             y {"<"} {s.x2_pivot}
                                         </td>
                                         <td>
+                                            {s.bottom_data.length}
+                                        </td>
+                                        <td>
                                             {Math.trunc(s.q1 * 100) / 100}
+                                        </td>
+                                        <td>
+                                            {s.top_data.length}
                                         </td>
                                         <td>
                                             {Math.trunc(s.q2 * 100) /100}
