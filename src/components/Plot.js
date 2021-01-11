@@ -364,6 +364,20 @@ class Plot extends React.Component {
         }
     }
 
+    showNodePopup = () => {
+        return(
+            <div className="popup-message-container row">
+                <div className="col-3"></div>
+                <Animated animationIn="bounceInUp" animationOut="bounceOutDown" isVisible={this.state.showMoreNodesPopup}>
+                <div className="popup-message col-6">
+                    Split has been made in the plot and more nodes are added at the bottom!
+                </div>
+                </Animated>
+                <div className="col-3"></div>
+            </div>
+        )
+    }
+
     render() {
         return(
             <div>
@@ -463,15 +477,7 @@ class Plot extends React.Component {
 
 
                 
-                <div className="popup-message-container row">
-                    <div className="col-3"></div>
-                    <Animated animationIn="bounceInUp" animationOut="bounceOutDown" isVisible={this.state.showMoreNodesPopup}>
-                    <div className="popup-message col-6">
-                        Split has been made in the plot and more nodes are added at the bottom!
-                    </div>
-                    </Animated>
-                    <div className="col-3"></div>
-                </div>
+                {this.state.showMoreNodesPopup ? this.showNodePopup(): null}
                 
             </div>
         )
