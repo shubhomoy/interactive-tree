@@ -206,7 +206,8 @@ class Misclassification extends React.Component {
                                 Q2 <br />(Right Region)
                             </td>
                             <td className="highlighted-column-2">
-                                Missclassification
+                                Missclassification (rounded)<br />
+                                n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>
@@ -269,7 +270,8 @@ class Misclassification extends React.Component {
                                 Q2 <br />(Top Region)
                             </td>
                             <td className="highlighted-column-2">
-                                Missclassification
+                                Missclassification (rounded)<br />
+                                n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>

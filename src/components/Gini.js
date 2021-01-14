@@ -227,7 +227,8 @@ class Gini extends React.Component {
                                 Q2 <br />(Right Region)
                             </td>
                             <td className="highlighted-column-2">
-                                GINI
+                                GINI (rounded)<br />
+                                n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>
@@ -290,7 +291,8 @@ class Gini extends React.Component {
                                 Q2 <br />(Top Region)
                             </td>
                             <td className="highlighted-column-2">
-                                GINI
+                                GINI  (rounded)<br />
+                                n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>

@@ -228,7 +228,8 @@ class Entropy extends React.Component {
                                 Q2 <br />(Right Region)
                             </td>
                             <td className="highlighted-column-2">
-                                Entropy
+                                Entropy (rounded)<br />
+                                n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>
@@ -293,7 +294,8 @@ class Entropy extends React.Component {
                                 Q2 <br />(Top Region)
                             </td>
                             <td className="highlighted-column-2">
-                                Entropy
+                            Entropy (rounded)<br />
+                            n1*Q1 + n2*Q2
                             </td>
                             <td></td>
                         </tr>
