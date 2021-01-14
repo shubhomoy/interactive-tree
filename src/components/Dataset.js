@@ -125,6 +125,7 @@ class Dataset extends React.Component {
                                         clearSplitState={this.props.clearSplitState} 
                                         dataset={this.construct_dataset_from_data(data)} 
                                         subdata={data} 
+                                        onPreview={this.props.onPreview}
                                         onSplitSelected={this.getSplits}
                                         onUpdateClearSplitState={this.props.onUpdateClearSplitState} />
                                     <div className="spacer"></div>
@@ -151,6 +152,7 @@ class Dataset extends React.Component {
                                         clearSplitState={this.props.clearSplitState} 
                                         dataset={this.construct_dataset_from_data(data)} 
                                         subdata={data} 
+                                        onPreview={this.props.onPreview}
                                         onSplitSelected={this.getSplits}
                                         onUpdateClearSplitState={this.props.onUpdateClearSplitState} />
                                     <div className="spacer"></div>
@@ -178,6 +180,7 @@ class Dataset extends React.Component {
                                         dataset={this.construct_dataset_from_data(data)} 
                                         subdata={data} 
                                         onSplitSelected={this.getSplits}
+                                        onPreview={this.props.onPreview}
                                         onUpdateClearSplitState={this.props.onUpdateClearSplitState} />
                                     <div className="spacer"></div>
                                 </div>

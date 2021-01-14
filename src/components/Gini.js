@@ -197,14 +197,18 @@ class Gini extends React.Component {
         this.props.onSplitSelected(selected_split, this.props.subdata)
     }
 
+    preview = (subdata) => {
+        this.props.onPreview(subdata)
+    }
+
     render() {
         let split_x1 = this.calculate_x1()
         let split_x2 = this.calculate_x2()
         return(
-            <div className="neu">
+            <div className="neu preview-node-container">
                 <h3>Node {this.props.node}</h3>
                 <div className="help-text">Click on the desired threshold to split the node and create a decision boundary. After every split, new nodes are added at the bottom</div>
-                <table width="100%" className="split-table">
+                <table width="100%" className="split-table" onMouseOver={() => {this.preview(this.props.subdata)}}>
                     <tbody>
                         <tr className="table-header">
                             <td>

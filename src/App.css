@@ -54,6 +54,18 @@ body .container {
   cursor: pointer;
   background-color: aqua;
 }
+.plot-container .preview-overlay {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  left: 20px;
+  top: 20px;
+  background-color: rgba(184, 242, 255, 0.4);
+}
+
+.preview-node-container:hover {
+  background-color: #e0f9ff;
+}
 
 .tick-x1-container {
   float: left;

@@ -22,7 +22,11 @@ class Plot extends React.Component {
             'announcement': null,
             'tooltip': false,
             'current_coord': null,
-            'showMoreNodesPopup': false
+            'showMoreNodesPopup': false,
+            'preview_left': '0px',
+            'preview_top': '0px',
+            'preview_width': '0px',
+            'preview_height': '0px'
         }
 
         this.updateActiveClass = this.updateActiveClass.bind(this);
@@ -308,7 +312,11 @@ class Plot extends React.Component {
         this.setState({
             lines: [],
             sub_data: subdata,
-            clear_split: true
+            clear_split: true,
+            preview_height: '0px',
+            preview_width: '0px',
+            preview_left: '0px',
+            preview_top: '0px'
         })
     }
 
@@ -380,6 +388,15 @@ class Plot extends React.Component {
         )
     }
 
+    previewSplit = (subdata) => {
+        this.setState({
+            preview_left: subdata.coord_1[0] * 10 + 'px',
+            preview_top: subdata.coord_1[1] * 10 + 'px',
+            preview_width: (subdata.coord_2[0] + 1)*10 - subdata.coord_1[0] * 10 + 'px',
+            preview_height: (subdata.coord_2[1] + 1)*10 - subdata.coord_1[1] * 10 + 'px'
+        })
+    }
+
     render() {
         return(
             <div>
@@ -407,6 +424,8 @@ class Plot extends React.Component {
                                                     })
                                                 })
                                             }
+
+                                            <div className="preview-overlay" style={{left: this.state.preview_left, top: this.state.preview_top, width: this.state.preview_width, height: this.state.preview_height}}></div>
                                         </div>
                                         <div className="tick-x1-container">
                                             <div className="x1-tick" style={{width: "10px"}}>0</div>
@@ -494,6 +513,7 @@ class Plot extends React.Component {
                                 clearSplitState={this.state.clear_split} 
                                 onSplitSelected={this.getSplits} 
                                 onClearClassification={this.clearSplits}
+                                onPreview={this.previewSplit}
                                 onUpdateClearSplitState={this.updateClearSplitState} />
 
                             {this.state.showMoreNodesPopup ? this.showNodePopup(): null}

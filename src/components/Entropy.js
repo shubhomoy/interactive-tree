@@ -198,14 +198,18 @@ class Entropy extends React.Component {
         this.props.onSplitSelected(selected_split, this.props.subdata)
     }
 
+    preview = (subdata) => {
+        this.props.onPreview(subdata)
+    }
+
     render() {
         let split_x1 = this.calculate_x1()
         let split_x2 = this.calculate_x2()
         return(
-            <div className="neu">
+            <div className="neu preview-node-container">
                 <h3>Node {this.props.node}</h3>
                 <div className="help-text">Click on the desired threshold to split the node and create a decision boundary. After every split, new nodes are added at the bottom</div>
-                <table width="100%" className="split-table">
+                <table width="100%" className="split-table" onMouseOver={() => {this.preview(this.props.subdata)}}>
                     <tbody>
                         <tr className="table-header">
                             <td>
@@ -237,7 +241,8 @@ class Entropy extends React.Component {
                                     s.q2 = 0
                                 return(
                                     <tr key={idx} className={
-                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "table-data"} onClick={() => this.setSplit('x1', s.x1_pivot)}>
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "table-data"} onClick={() => this.setSplit('x1', s.x1_pivot)}
+                                        >
                                         <td>
                                             {s.left_data.length}
                                         </td>
