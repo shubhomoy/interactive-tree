@@ -1,7 +1,9 @@
 import React from 'react'
 import Dataset from './Dataset'
+import Footer from './Footer'
 import MouseTooltip from 'react-sticky-mouse-tooltip';
 import {Animated} from 'react-animated-css'
+
 
 class Plot extends React.Component {
 
@@ -381,76 +383,90 @@ class Plot extends React.Component {
     render() {
         return(
             <div>
-                <div className="row">
-                    <div className="col-7">
-                        <div style={{minWidth: "440px"}}>
-                            <div className="tick-x2-container">
-                                <div className="x2-tick" style={{paddingTop: "35px"}}>35</div>
-                                <div className="x2-tick">30</div>
-                                <div className="x2-tick">25</div>
-                                <div className="x2-tick" style={{paddingTop: "27px"}}>20</div>
-                                <div className="x2-tick">15</div>
-                                <div className="x2-tick" style={{paddingTop: "27px"}}>10</div>
-                                <div className="x2-tick" style={{height: "85px"}}>5</div>
-                            </div>
-                            <div className="plot-container">
-                                {
-                                    this.state.data.map((row, i) => {
-                                        return row.map((cell, j) => {
-                                            return this.draw_cell(i, j, cell)
-                                        })
-                                    })
-                                }
-                            </div>
-                            <div className="tick-x1-container">
-                                <div className="x1-tick" style={{width: "10px"}}>0</div>
-                                <div className="x1-tick" style={{width: "50px"}}>5</div>
-                                <div className="x1-tick" style={{width: "55px"}}>10</div>
-                                <div className="x1-tick">15</div>
-                                <div className="x1-tick">20</div>
-                                <div className="x1-tick">25</div>
-                                <div className="x1-tick">30</div>
-                                <div className="x1-tick">35</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-5">
-                        <div className="neu-2 class-entry-container">
-                            {this.state.classes.map((cls, key) => {
-                                return(
-                                    <div key={key} className="class-container">
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="selected_color" style={{backgroundColor: cls.color}}></div>
-                                                <input className="class-text" type="text" placeholder="Class Name" value={this.state.classes[key].name} onChange={e => this.updateChange(e.target.value, key, 'name')}/>
-                                                <div className="remove-class-btn" onClick={() => this.removeClass(cls)}>X</div>
-                                            </div>
+                <div className="left-pane">
+                    <div className="spacer"></div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div style={{minWidth: "440px"}}>
+                                        <div className="tick-x2-container">
+                                            <div className="x2-tick" style={{paddingTop: "35px"}}>35</div>
+                                            <div className="x2-tick">30</div>
+                                            <div className="x2-tick">25</div>
+                                            <div className="x2-tick" style={{paddingTop: "27px"}}>20</div>
+                                            <div className="x2-tick">15</div>
+                                            <div className="x2-tick" style={{paddingTop: "27px"}}>10</div>
+                                            <div className="x2-tick" style={{height: "85px"}}>5</div>
                                         </div>
-                                        <div className="row">    
-                                            <div className="col-12-sm">
-                                                <center>
-                                                <button className={this.state.activeClass === cls ? "add-to-graph-selected": "add-to-graph"} onClick={() => this.updateActiveClass(cls, key)}>
-                                                    {this.state.activeClass === cls ? "Selected": "Add to plot"}
-                                                </button>
-                                                </center>
-                                            </div>
+                                        <div className="plot-container">
+                                            {
+                                                this.state.data.map((row, i) => {
+                                                    return row.map((cell, j) => {
+                                                        return this.draw_cell(i, j, cell)
+                                                    })
+                                                })
+                                            }
                                         </div>
-                                        <div className="row">    
-                                            <div className="col-12-sm">
-                                                <center>
-                                                {this.state.activeClass === cls ? cls.msg: cls.error}
-                                                </center>
-                                            </div>
+                                        <div className="tick-x1-container">
+                                            <div className="x1-tick" style={{width: "10px"}}>0</div>
+                                            <div className="x1-tick" style={{width: "50px"}}>5</div>
+                                            <div className="x1-tick" style={{width: "55px"}}>10</div>
+                                            <div className="x1-tick">15</div>
+                                            <div className="x1-tick">20</div>
+                                            <div className="x1-tick">25</div>
+                                            <div className="x1-tick">30</div>
+                                            <div className="x1-tick">35</div>
                                         </div>
                                     </div>
-                                )
-                            })}
+                                </div>
+                            </div>
 
-                            {this.state.classes.length < 5 ? this.showCreateClassButton(): null}
+                            <div className="row">
+                                <div className="col-12">
+                                    {this.showAnnouncement()}
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="neu-2 class-entry-container">
+                                        {this.state.classes.map((cls, key) => {
+                                            return(
+                                                <div key={key} className="class-container">
+                                                    <div className="row">
+                                                        <div className="col-12">
+                                                            <div className="selected_color" style={{backgroundColor: cls.color}}></div>
+                                                            <input className="class-text" type="text" placeholder="Class Name" value={this.state.classes[key].name} onChange={e => this.updateChange(e.target.value, key, 'name')}/>
+                                                            <div className="remove-class-btn" onClick={() => this.removeClass(cls)}>X</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">    
+                                                        <div className="col-12-sm">
+                                                            <center>
+                                                            <button className={this.state.activeClass === cls ? "add-to-graph-selected": "add-to-graph"} onClick={() => this.updateActiveClass(cls, key)}>
+                                                                {this.state.activeClass === cls ? "Selected": "Add to plot"}
+                                                            </button>
+                                                            </center>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">    
+                                                        <div className="col-12-sm">
+                                                            <center>
+                                                            {this.state.activeClass === cls ? cls.msg: cls.error}
+                                                            </center>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+
+                                        {this.state.classes.length < 5 ? this.showCreateClassButton(): null}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <MouseTooltip
                         className="tooltip"
                         visible={this.state.tooltip}
@@ -458,27 +474,33 @@ class Plot extends React.Component {
                         offsetY={10}>
                         <span>{this.state.current_coord}</span>
                     </MouseTooltip>
-
                 </div>
-                {/* Eng of class and plot */}
-                
-                {this.showAnnouncement()}
-
-                <Dataset 
-                    data={this.state.data} 
-                    subdata={this.state.sub_data} 
-                    dataset={this.state.dataset} 
-                    classes={this.state.classes}
-                    clearSplitState={this.state.clear_split} 
-                    onSplitSelected={this.getSplits} 
-                    onClearClassification={this.clearSplits}
-                    onUpdateClearSplitState={this.updateClearSplitState} />
-                <div className="spacer"></div>
 
 
-                
-                {this.state.showMoreNodesPopup ? this.showNodePopup(): null}
-                
+
+                <div className="right-pane">
+                    <div className="row" style={{height: "100%"}}>
+                        <div className="col-12">
+                            <div className="row">
+                                <div className="col-12-sm">
+                                    <h1 className="site-title">Interactive Decision Trees</h1>
+                                </div>
+                            </div>
+                            <Dataset 
+                                data={this.state.data} 
+                                subdata={this.state.sub_data} 
+                                dataset={this.state.dataset} 
+                                classes={this.state.classes}
+                                clearSplitState={this.state.clear_split} 
+                                onSplitSelected={this.getSplits} 
+                                onClearClassification={this.clearSplits}
+                                onUpdateClearSplitState={this.updateClearSplitState} />
+
+                            {this.state.showMoreNodesPopup ? this.showNodePopup(): null}
+                        </div>
+                    </div>
+                    <Footer />
+                </div>
             </div>
         )
     }

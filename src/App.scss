@@ -1,9 +1,30 @@
 body {
     background-color: #ebebeb;
+    .container {
+        width: 100%;
+        max-width: 100rem;
+    }
 }
 
 .site-title {
     text-align: center;
+}
+
+.left-pane {
+    min-width: 500px;
+    width: 30%;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    overflow-y: scroll;
+}
+
+.right-pane {
+    position: absolute;
+    left: 500px;
+    width: 68%;
+    min-width: 600px;
+    height: 100%;
 }
 
 .plot-container {
@@ -228,6 +249,14 @@ body {
         font-weight: bold;
         color: #1a967b;
     }
+
+    .highlighted-column-1 {
+        background-color: #bbdefb;
+    }
+
+    .highlighted-column-2 {
+        background-color: #b2dfdb;
+    }
 }
 
 .table-header {
@@ -381,7 +410,7 @@ body {
 }
 
 .footer {
-    margin-top: 150px;
+    margin-top: 0px;
     z-index: 999999;
     text-align: center;
     color: #78909c;

@@ -187,21 +187,21 @@ class Misclassification extends React.Component {
                     <tbody>
                         <tr className="table-header">
                             <td>
-                                Threshold Values
-                            </td>
-                            <td>
                                 n1
                             </td>
                             <td>
-                                Q1 <br />(Left or Bottom Region)
+                                Q1 <br />(Left Region)
+                            </td>
+                            <td className="highlighted-column-1">
+                                Threshold
                             </td>
                             <td>
                                 n2
                             </td>
                             <td>
-                                Q2 <br />(Right or Top Region)
+                                Q2 <br />(Right Region)
                             </td>
-                            <td>
+                            <td className="highlighted-column-2">
                                 Missclassification
                             </td>
                             <td></td>
@@ -217,13 +217,14 @@ class Misclassification extends React.Component {
                                     <tr key={idx} className={
                                         (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "table-data"} onClick={() => this.setSplit('x1', s.x1_pivot)}>
                                         <td>
-                                            x {"<"} {s.x1_pivot}
-                                        </td>
-                                        <td>
                                             {s.left_data.length}
                                         </td>
                                         <td>
                                             {Math.trunc(s.q1 * 100) / 100}
+                                        </td>
+                                        <td className={
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "highlighted-column-1"}>
+                                            <b>x {"<"} {s.x1_pivot}</b>
                                         </td>
                                         <td>
                                             {s.right_data.length}
@@ -231,7 +232,8 @@ class Misclassification extends React.Component {
                                         <td>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
-                                        <td>
+                                        <td className={
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "highlighted-column-2"}>
                                             {Math.trunc(s.missclassification*100) / 100}
                                         </td>
                                         <td className="recommended">
@@ -245,6 +247,27 @@ class Misclassification extends React.Component {
                             <td colSpan="7">
                                 <hr className="dashed-line" />
                             </td>
+                        </tr>
+                        <tr className="table-header">
+                            <td>
+                                n1
+                            </td>
+                            <td>
+                                Q1 <br />(Bottom Region)
+                            </td>
+                            <td className="highlighted-column-1">
+                                Threshold
+                            </td>
+                            <td>
+                                n2
+                            </td>
+                            <td>
+                                Q2 <br />(Top Region)
+                            </td>
+                            <td className="highlighted-column-2">
+                                Missclassification
+                            </td>
+                            <td></td>
                         </tr>
                         
                         
@@ -260,13 +283,14 @@ class Misclassification extends React.Component {
                                         (this.state.selected_split!== null && this.state.selected_split.axis === "x2" && this.state.selected_split.value === s.x2_pivot) ? "table-data-selected": "table-data"
                                     } onClick={() => this.setSplit('x2', s.x2_pivot)}>
                                         <td>
-                                            y {"<"} {s.x2_pivot}
-                                        </td>
-                                        <td>
                                             {s.bottom_data.length}
                                         </td>
                                         <td>
                                             {Math.trunc(s.q1 * 100) / 100}
+                                        </td>
+                                        <td className={
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x2" && this.state.selected_split.value === s.x2_pivot) ? "table-data-selected": "highlighted-column-1"}>
+                                            <b>y {"<"} {s.x2_pivot}</b>
                                         </td>
                                         <td>
                                             {s.top_data.length}
@@ -274,7 +298,8 @@ class Misclassification extends React.Component {
                                         <td>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
-                                        <td>
+                                        <td className={
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x2" && this.state.selected_split.value === s.x2_pivot) ? "table-data-selected": "highlighted-column-2"}>
                                             {Math.trunc(s.missclassification*100) / 100}
                                         </td>
                                         <td className="recommended">
