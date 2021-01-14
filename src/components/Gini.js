@@ -1,4 +1,5 @@
 import React from 'react'
+import MouseTooltip from 'react-sticky-mouse-tooltip';
 
 class Gini extends React.Component {
 
@@ -6,7 +7,9 @@ class Gini extends React.Component {
         super(props)
         this.state = {
             selected_split: null,
-            min_error: 99999
+            min_error: 99999,
+            tooltip: false,
+            calculation: ''
         }
         this.setSplit = this.setSplit.bind(this)
     }
@@ -77,13 +80,20 @@ class Gini extends React.Component {
 
     get_gini = (dataset) => {
         let classes = this.get_classes(dataset)
-        let result = 0
+        let result = {
+            calculation: '',
+            result: 0
+        }
         classes.forEach((cls) => {
             let cls_freq = this.get_class_freq(dataset, cls)
             let cls_prob = cls_freq / dataset.length
             let gini = cls_prob * (1 - cls_prob)
-            result += gini
+            result.calculation += '(' + cls_freq + "/" + dataset.length + " * " + (dataset.length-cls_freq) + "/" + dataset.length + ') + '
+            result.result += gini
         })
+
+        result.calculation = result.calculation.substring(0, result.calculation.length - 3)
+        result.calculation += " = " + Math.trunc(result.result * 100) / 100
 
         return result
     }
@@ -118,7 +128,7 @@ class Gini extends React.Component {
             let gini_left = this.get_gini(left_data)
             let gini_right = this.get_gini(right_data)
 
-            let gini = (gini_left * left_data.length) + (gini_right * right_data.length)
+            let gini = (gini_left.result * left_data.length) + (gini_right.result * right_data.length)
 
             if(gini < this.state.min_error) {
                 this.setState({min_error: gini})
@@ -126,10 +136,12 @@ class Gini extends React.Component {
             result.push({
                 x1_pivot: x1_pivot,
                 gini: gini,
-                q1: gini_left,
-                q2: gini_right,
+                q1: gini_left.result,
+                q2: gini_right.result,
                 left_data: left_data,
-                right_data: right_data
+                right_data: right_data,
+                calculation_left: gini_left.calculation,
+                calculation_right: gini_right.calculation
             })
         }
         return result
@@ -161,7 +173,7 @@ class Gini extends React.Component {
             let gini_top = this.get_gini(top_data)
             let gini_bottom = this.get_gini(bottom_data)
 
-            let gini = (gini_top * top_data.length) + (gini_bottom * bottom_data.length)
+            let gini = (gini_top.result * top_data.length) + (gini_bottom.result * bottom_data.length)
 
             if(gini < this.state.min_error) {
                 this.setState({min_error: gini})
@@ -169,10 +181,12 @@ class Gini extends React.Component {
             result.push({
                 x2_pivot: x2_pivot,
                 gini: gini,
-                q1: gini_bottom,
-                q2: gini_top,
+                q1: gini_bottom.result,
+                q2: gini_top.result,
                 top_data: top_data,
-                bottom_data: bottom_data
+                bottom_data: bottom_data,
+                calculation_bottom: gini_bottom.calculation,
+                calculation_top: gini_top.calculation
             })
         }
         return result
@@ -199,6 +213,20 @@ class Gini extends React.Component {
 
     preview = (subdata) => {
         this.props.onPreview(subdata)
+    }
+
+    showToolTip = (text) => {
+        this.setState({
+            tooltip: true,
+            calculation: text
+        })
+    }
+
+    hideToolTip = () => {
+        this.setState({
+            tooltip: false,
+            calculation: ''
+        })
     }
 
     render() {
@@ -245,7 +273,7 @@ class Gini extends React.Component {
                                         <td>
                                             {s.left_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_left)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -255,7 +283,7 @@ class Gini extends React.Component {
                                         <td>
                                             {s.right_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_right)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -311,7 +339,7 @@ class Gini extends React.Component {
                                         <td>
                                             {s.bottom_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_bottom)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -321,7 +349,7 @@ class Gini extends React.Component {
                                         <td>
                                             {s.top_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_top)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -339,6 +367,13 @@ class Gini extends React.Component {
                 
                 </table>
                 <div className="spacer"></div>
+                <MouseTooltip
+                        className="tooltip"
+                        visible={this.state.tooltip}
+                        offsetX={15}
+                        offsetY={10}>
+                        <span>{this.state.calculation}</span>
+                </MouseTooltip>
             </div>
         )
     }

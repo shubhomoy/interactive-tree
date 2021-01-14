@@ -1,4 +1,5 @@
 import React from 'react'
+import MouseTooltip from 'react-sticky-mouse-tooltip';
 
 class Entropy extends React.Component {
 
@@ -6,7 +7,9 @@ class Entropy extends React.Component {
         super(props)
         this.state = {
             selected_split: null,
-            min_error: 99999
+            min_error: 99999,
+            tooltip: false,
+            calculation: ''
         }
         this.setSplit = this.setSplit.bind(this)
     }
@@ -77,15 +80,21 @@ class Entropy extends React.Component {
 
     get_entropy = (dataset) => {
         let classes = this.get_classes(dataset)
-        let result = 0
+        let result = {
+            result: 0,
+            calculation: ''
+        }
         classes.forEach((cls) => {
             let cls_freq = this.get_class_freq(dataset, cls)
             let cls_prob = cls_freq / dataset.length
             let entropy = cls_prob * Math.log(cls_prob)
-            result += entropy
+            result.calculation += '(' + cls_freq + "/" + dataset.length + " * ln(" + cls_freq + "/" + dataset.length + ')) + '
+            result.result += entropy
         })
 
-        result = -result
+        result.calculation = result.calculation.substring(0, result.calculation.length - 3)
+        result.calculation = "-[ " + result.calculation + " ] = " + -Math.trunc(result.result*100)/100
+        result.result = -result.result
         return result
     }
 
@@ -119,7 +128,7 @@ class Entropy extends React.Component {
             let entropy_left = this.get_entropy(left_data)
             let entropy_right = this.get_entropy(right_data)
 
-            let entropy = (entropy_left * left_data.length) + (entropy_right * right_data.length)
+            let entropy = (entropy_left.result * left_data.length) + (entropy_right.result * right_data.length)
 
             if(entropy < this.state.min_error) {
                 this.setState({min_error: entropy})
@@ -127,10 +136,12 @@ class Entropy extends React.Component {
             result.push({
                 x1_pivot: x1_pivot,
                 entropy: entropy,
-                q1: entropy_left,
-                q2: entropy_right,
+                q1: entropy_left.result,
+                q2: entropy_right.result,
                 left_data: left_data,
-                right_data: right_data
+                right_data: right_data,
+                calculation_left: entropy_left.calculation,
+                calculation_right: entropy_right.calculation
             })
         }
         return result
@@ -162,7 +173,7 @@ class Entropy extends React.Component {
             let entropy_top = this.get_entropy(top_data)
             let entropy_bottom = this.get_entropy(bottom_data)
 
-            let entropy = (entropy_top * top_data.length) + (entropy_bottom * bottom_data.length)
+            let entropy = (entropy_top.result * top_data.length) + (entropy_bottom.result * bottom_data.length)
 
             if(entropy < this.state.min_error) {
                 this.setState({min_error: entropy})
@@ -170,10 +181,12 @@ class Entropy extends React.Component {
             result.push({
                 x2_pivot: x2_pivot,
                 entropy: entropy,
-                q1: entropy_bottom,
-                q2: entropy_top,
+                q1: entropy_bottom.result,
+                q2: entropy_top.result,
                 top_data: top_data,
-                bottom_data: bottom_data
+                bottom_data: bottom_data,
+                calculation_bottom: entropy_bottom.calculation,
+                calculation_top: entropy_top.calculation
             })
         }
         return result
@@ -200,6 +213,20 @@ class Entropy extends React.Component {
 
     preview = (subdata) => {
         this.props.onPreview(subdata)
+    }
+
+    showToolTip = (text) => {
+        this.setState({
+            tooltip: true,
+            calculation: text
+        })
+    }
+
+    hideToolTip = () => {
+        this.setState({
+            tooltip: false,
+            calculation: ''
+        })
     }
 
     render() {
@@ -247,7 +274,7 @@ class Entropy extends React.Component {
                                         <td>
                                             {s.left_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_left)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -257,7 +284,7 @@ class Entropy extends React.Component {
                                         <td>
                                             {s.right_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_right)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -315,7 +342,7 @@ class Entropy extends React.Component {
                                         <td>
                                             {s.bottom_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_bottom)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -325,7 +352,7 @@ class Entropy extends React.Component {
                                         <td>
                                             {s.top_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_top)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -343,6 +370,13 @@ class Entropy extends React.Component {
                 
                 </table>
                 <div className="spacer"></div>
+                <MouseTooltip
+                        className="tooltip"
+                        visible={this.state.tooltip}
+                        offsetX={15}
+                        offsetY={10}>
+                        <span>{this.state.calculation}</span>
+                </MouseTooltip>
             </div>
         )
     }

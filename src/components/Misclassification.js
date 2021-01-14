@@ -1,4 +1,5 @@
 import React from 'react'
+import MouseTooltip from 'react-sticky-mouse-tooltip';
 
 class Misclassification extends React.Component {
 
@@ -6,7 +7,9 @@ class Misclassification extends React.Component {
         super(props)
         this.state = {
             selected_split: null,
-            min_error: 99999
+            min_error: 99999,
+            tooltip: false,
+            calculation: ''
         }
         this.setSplit = this.setSplit.bind(this)
     }
@@ -57,6 +60,7 @@ class Misclassification extends React.Component {
     get_max_class_num = (dataset) => {
         let class_freq = {}
         let max = 0
+        let calculation = ''
         dataset.forEach((data) => {
             class_freq[data.class] = (class_freq[data.class] || 0) + 1
             if(class_freq[data.class] > max)
@@ -90,7 +94,10 @@ class Misclassification extends React.Component {
             let right_data = this.get_right(x1_pivot, dataset)
 
             let missclass_left = 1 - (this.get_max_class_num(left_data) / left_data.length)
+            let calculation_left = "1 - (" + this.get_max_class_num(left_data) + "/" + left_data.length + ") = " + Math.trunc((isNaN(missclass_left) ? 0: missclass_left)*100)/100
+
             let missclass_right = 1 - (this.get_max_class_num(right_data) / right_data.length)
+            let calculation_right = "1 - (" + this.get_max_class_num(right_data) + "/" + right_data.length + ") = " + Math.trunc((isNaN(missclass_right) ? 0: missclass_right)*100)/100
 
             missclass_left = isNaN(missclass_left) ? 0: missclass_left
             missclass_right = isNaN(missclass_right) ? 0: missclass_right
@@ -105,7 +112,9 @@ class Misclassification extends React.Component {
                 q1: missclass_left,
                 q2: missclass_right,
                 left_data: left_data,
-                right_data: right_data
+                right_data: right_data,
+                calculation_left: calculation_left,
+                calculation_right: calculation_right
             })
         }
         return result
@@ -135,7 +144,10 @@ class Misclassification extends React.Component {
             let bottom_data = this.get_bottom(x2_pivot, dataset)
 
             let missclass_top = 1 - (this.get_max_class_num(top_data) / top_data.length)
+            let calculation_top = "1 - (" + this.get_max_class_num(top_data) + "/" + top_data.length + ") = " + Math.trunc((isNaN(missclass_top) ? 0: missclass_top)*100)/100
+
             let missclass_bottom = 1 - (this.get_max_class_num(bottom_data) / bottom_data.length)
+            let calculation_bottom = "1 - (" + this.get_max_class_num(bottom_data) + "/" + bottom_data.length + ") = " + Math.trunc((isNaN(missclass_bottom) ? 0: missclass_bottom)*100)/100
 
             missclass_top = isNaN(missclass_top) ? 0: missclass_top
             missclass_bottom = isNaN(missclass_bottom) ? 0: missclass_bottom
@@ -151,7 +163,9 @@ class Misclassification extends React.Component {
                 q1: missclass_bottom,
                 q2: missclass_top,
                 top_data: top_data,
-                bottom_data: bottom_data
+                bottom_data: bottom_data,
+                calculation_top: calculation_top,
+                calculation_bottom: calculation_bottom
             })
         }
         return result
@@ -178,6 +192,20 @@ class Misclassification extends React.Component {
 
     preview = (subdata) => {
         this.props.onPreview(subdata)
+    }
+
+    showToolTip = (text) => {
+        this.setState({
+            tooltip: true,
+            calculation: text
+        })
+    }
+
+    hideToolTip = () => {
+        this.setState({
+            tooltip: false,
+            calculation: ''
+        })
     }
 
     render() {
@@ -224,7 +252,7 @@ class Misclassification extends React.Component {
                                         <td>
                                             {s.left_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_left)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -234,7 +262,7 @@ class Misclassification extends React.Component {
                                         <td>
                                             {s.right_data.length}
                                         </td>
-                                        <td>
+                                        <td  onMouseOver={() => {this.showToolTip(s.calculation_right)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -291,7 +319,7 @@ class Misclassification extends React.Component {
                                         <td>
                                             {s.bottom_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_bottom)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q1 * 100) / 100}
                                         </td>
                                         <td className={
@@ -301,7 +329,7 @@ class Misclassification extends React.Component {
                                         <td>
                                             {s.top_data.length}
                                         </td>
-                                        <td>
+                                        <td onMouseOver={() => {this.showToolTip(s.calculation_top)}} onMouseOut={() => this.hideToolTip()}>
                                             {Math.trunc(s.q2 * 100) /100}
                                         </td>
                                         <td className={
@@ -319,6 +347,13 @@ class Misclassification extends React.Component {
                 
                 </table>
                 <div className="spacer"></div>
+                <MouseTooltip
+                        className="tooltip"
+                        visible={this.state.tooltip}
+                        offsetX={15}
+                        offsetY={10}>
+                        <span>{this.state.calculation}</span>
+                </MouseTooltip>
             </div>
         )
     }
