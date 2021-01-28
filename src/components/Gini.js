@@ -9,9 +9,21 @@ class Gini extends React.Component {
             selected_split: null,
             min_error: 99999,
             tooltip: false,
-            calculation: ''
+            calculation: '',
+            split_x1: [],
+            split_x2: []
         }
         this.setSplit = this.setSplit.bind(this)
+    }
+
+    componentDidMount() {
+        let xsplit = this.calculate_x1(9999)
+        let ysplit = this.calculate_x2(xsplit[1])
+        this.setState({
+            split_x1: xsplit[0],
+            split_x2: ysplit[0],
+            min_error: ysplit[1]
+        })
     }
 
     get_top = (pivot, dataset) => {
@@ -98,7 +110,7 @@ class Gini extends React.Component {
         return result
     }
 
-    calculate_x1 = () => {
+    calculate_x1 = (min_error) => {
         // Sort the dataset increasing order of x-coord
         let dataset = [...this.props.dataset];
         dataset = dataset.sort((a, b) => a.x1 > b.x1 ? 1 : -1)
@@ -130,9 +142,10 @@ class Gini extends React.Component {
 
             let gini = (gini_left.result * left_data.length) + (gini_right.result * right_data.length)
 
-            if(gini < this.state.min_error) {
-                this.setState({min_error: gini})
+            if(gini < min_error) {
+                min_error = gini
             }
+
             result.push({
                 x1_pivot: x1_pivot,
                 gini: gini,
@@ -141,13 +154,20 @@ class Gini extends React.Component {
                 left_data: left_data,
                 right_data: right_data,
                 calculation_left: gini_left.calculation,
-                calculation_right: gini_right.calculation
+                calculation_right: gini_right.calculation,
+
+                preview_line: {
+                    left: (x1_pivot + 0.5)*10 + "px",
+                    top: this.props.subdata.coord_1[1] * 10 + 'px',
+                    height: (this.props.subdata.coord_2[1] + 1)*10 - this.props.subdata.coord_1[1] * 10 + 'px',
+                    width: '0px'
+                }
             })
         }
-        return result
+        return [result, min_error]
     }
 
-    calculate_x2 = () => {
+    calculate_x2 = (min_error) => {
         let dataset = [...this.props.dataset];
         dataset = dataset.sort((a, b) => a.x2 > b.x2 ? 1 : -1)
         let x2_pivot = 0
@@ -175,8 +195,8 @@ class Gini extends React.Component {
 
             let gini = (gini_top.result * top_data.length) + (gini_bottom.result * bottom_data.length)
 
-            if(gini < this.state.min_error) {
-                this.setState({min_error: gini})
+            if(gini < min_error) {
+                min_error = gini
             }
             result.push({
                 x2_pivot: x2_pivot,
@@ -186,10 +206,17 @@ class Gini extends React.Component {
                 top_data: top_data,
                 bottom_data: bottom_data,
                 calculation_bottom: gini_bottom.calculation,
-                calculation_top: gini_top.calculation
+                calculation_top: gini_top.calculation,
+
+                preview_line: {
+                    left: this.props.subdata.coord_1[0] * 10 + "px",
+                    top: (39 - x2_pivot + 0.5)*10 + 'px',
+                    height: '0px',
+                    width: ((this.props.subdata.coord_2[0] + 1) * 10) - (this.props.subdata.coord_1[0]*10) + 'px'
+                }
             })
         }
-        return result
+        return [result, min_error]
     }
 
     setSplit = (x, val) => {
@@ -230,13 +257,13 @@ class Gini extends React.Component {
     }
 
     render() {
-        let split_x1 = this.calculate_x1()
-        let split_x2 = this.calculate_x2()
+        let split_x1 = this.state.split_x1
+        let split_x2 = this.state.split_x2
         return(
-            <div className="neu preview-node-container">
+            <div className="neu preview-node-container" onMouseOver={() => {this.preview(this.props.subdata)}} onMouseOut={() => this.props.onClearPreview()}>
                 <h3>Node {this.props.node}</h3>
                 <div className="help-text">Click on the desired threshold to split the node and create a decision boundary. After every split, new nodes are added at the bottom</div>
-                <table width="100%" className="split-table" onMouseOver={() => {this.preview(this.props.subdata)}}>
+                <table width="100%" className="split-table">
                     <tbody>
                         <tr className="table-header">
                             <td>
@@ -269,7 +296,8 @@ class Gini extends React.Component {
                                     s.q2 = 0
                                 return(
                                     <tr key={idx} className={
-                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "table-data"} onClick={() => this.setSplit('x1', s.x1_pivot)}>
+                                        (this.state.selected_split!== null && this.state.selected_split.axis === "x1" && this.state.selected_split.value === s.x1_pivot) ? "table-data-selected": "table-data"} onClick={() => this.setSplit('x1', s.x1_pivot)}
+                                        onMouseOver={() => this.props.onPreviewSplit(s.preview_line)}>
                                         <td>
                                             {s.left_data.length}
                                         </td>
@@ -335,7 +363,7 @@ class Gini extends React.Component {
                                 return(
                                     <tr key={idx} className={
                                         (this.state.selected_split!== null && this.state.selected_split.axis === "x2" && this.state.selected_split.value === s.x2_pivot) ? "table-data-selected": "table-data"
-                                    } onClick={() => this.setSplit('x2', s.x2_pivot)}>
+                                    } onClick={() => this.setSplit('x2', s.x2_pivot)} onMouseOver={() => this.props.onPreviewSplit(s.preview_line)}>
                                         <td>
                                             {s.bottom_data.length}
                                         </td>

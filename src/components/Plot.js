@@ -26,7 +26,12 @@ class Plot extends React.Component {
             'preview_left': '0px',
             'preview_top': '0px',
             'preview_width': '0px',
-            'preview_height': '0px'
+            'preview_height': '0px',
+
+            'preview_line_top': '0px',
+            'preview_line_left': '0px',
+            'preview_line_height': '0px',
+            'preview_line_width': '0px',
         }
 
         this.updateActiveClass = this.updateActiveClass.bind(this);
@@ -397,6 +402,46 @@ class Plot extends React.Component {
         })
     }
 
+    previewSplitLine = (preview_line) => {
+        // this.setState({
+        //     preview_line_left: preview_line.left,
+        //     preview_line_top: preview_line.top,
+        //     preview_line_height: preview_line.height,
+        //     preview_line_width: preview_line.width
+        // })
+        // if(axis === 'x') {
+        //     let pivot = split.x1_pivot
+        //     this.setState({
+        //         preview_line_left: (pivot + 0.5)*10 + "px",
+        //         preview_line_top: subdata.coord_1[1] * 10 + 'px',
+        //         preview_line_height: (subdata.coord_2[1] + 1)*10 - subdata.coord_1[1] * 10 + 'px',
+        //         preview_line_width: '0px'
+        //     })
+        // }else {
+        //     let pivot = split.x2_pivot
+        //     this.setState({
+        //         preview_line_left: subdata.coord_1[0] * 10 + "px",
+        //         preview_line_top: (39 - pivot + 0.5)*10 + 'px',
+        //         preview_line_height: '0px',
+        //         preview_line_width: ((subdata.coord_2[0] + 1) * 10) - (subdata.coord_1[0]*10) + 'px'
+        //     })
+        // }
+    }
+
+    clearPreview = () => {
+        this.setState({
+            'preview_left': '0px',
+            'preview_top': '0px',
+            'preview_width': '0px',
+            'preview_height': '0px',
+
+            'preview_line_top': '0px',
+            'preview_line_left': '0px',
+            'preview_line_height': '0px',
+            'preview_line_width': '0px'
+        })
+    }
+
     render() {
         return(
             <div>
@@ -424,8 +469,11 @@ class Plot extends React.Component {
                                                     })
                                                 })
                                             }
-
-                                            <div className="preview-overlay" style={{left: this.state.preview_left, top: this.state.preview_top, width: this.state.preview_width, height: this.state.preview_height}}></div>
+                                            <div className="preview-container">
+                                                <div className="preview-line" style={{left: this.state.preview_line_left, top: this.state.preview_line_top, width: this.state.preview_line_width, height: this.state.preview_line_height}}></div>
+                                                <div className="preview-overlay" style={{left: this.state.preview_left, top: this.state.preview_top, width: this.state.preview_width, height: this.state.preview_height}}></div>
+                                            </div>
+                                            
                                         </div>
                                         <div className="tick-x1-container">
                                             <div className="x1-tick" style={{width: "10px"}}>0</div>
@@ -514,6 +562,8 @@ class Plot extends React.Component {
                                 onSplitSelected={this.getSplits} 
                                 onClearClassification={this.clearSplits}
                                 onPreview={this.previewSplit}
+                                onPreviewSplit={this.previewSplitLine}
+                                onClearPreview={this.clearPreview}
                                 onUpdateClearSplitState={this.updateClearSplitState} />
 
                             {this.state.showMoreNodesPopup ? this.showNodePopup(): null}

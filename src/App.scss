@@ -52,17 +52,30 @@ body {
     }
 
     .cell:hover {
-        cursor: pointer;
         background-color: aqua;
     }
 
-    .preview-overlay {
+    .preview-container {
+
         position: relative;
-        height: 40px;
-        width: 40px;
-        left: 20px;
-        top: 20px;
-        background-color: rgba(184, 242, 255, 0.4);
+
+        .preview-overlay {
+            position: absolute;
+            height: 40px;
+            width: 40px;
+            left: 20px;
+            top: 20px;
+            background-color: rgba(184, 242, 255, 0.4);
+        }
+    
+        .preview-line {
+            position: absolute;
+            height: 1px;
+            width: 200px;
+            top: 35px;
+            left: 0px;
+            border: 1px dotted #1b5e20;
+        }
     }
 }
 
@@ -248,12 +261,12 @@ body {
     }
 
     .table-data:hover {
-        font-size: 20px;
+        // font-size: 20px;
         background-color: rgb(248, 227, 187);
     }
 
     .table-data-selected {
-        font-size: 20px;
+        // font-size: 20px;
         background-color: #aed581;
     }
 

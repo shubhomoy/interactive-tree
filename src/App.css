@@ -51,16 +51,26 @@ body .container {
   background-color: "#ffffff";
 }
 .plot-container .cell:hover {
-  cursor: pointer;
   background-color: aqua;
 }
-.plot-container .preview-overlay {
+.plot-container .preview-container {
   position: relative;
+}
+.plot-container .preview-container .preview-overlay {
+  position: absolute;
   height: 40px;
   width: 40px;
   left: 20px;
   top: 20px;
   background-color: rgba(184, 242, 255, 0.4);
+}
+.plot-container .preview-container .preview-line {
+  position: absolute;
+  height: 1px;
+  width: 200px;
+  top: 35px;
+  left: 0px;
+  border: 1px dotted #1b5e20;
 }
 
 .preview-node-container:hover {
@@ -232,11 +242,9 @@ body .container {
   cursor: pointer;
 }
 .split-table .table-data:hover {
-  font-size: 20px;
   background-color: #f8e3bb;
 }
 .split-table .table-data-selected {
-  font-size: 20px;
   background-color: #aed581;
 }
 .split-table .recommended {
